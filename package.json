@@ -1,0 +1,15 @@
+{
+  "name": "music-electron-api",
+  "version": "1.0.0",
+  "description": "api",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "huanranc",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.5.0",
+    "koa-router": "^7.4.0"
+  }
+}
