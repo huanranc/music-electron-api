@@ -12,6 +12,8 @@
   "dependencies": {
     "apicache": "^1.2.0",
     "big-integer": "^1.6.26",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",
     "koa-convert": "^1.2.0",

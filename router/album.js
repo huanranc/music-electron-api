@@ -1,26 +1,24 @@
-const Koa = require('koa');
-const Router = require('koa-router');
+const express = require('express')
+const router = express()
+const { createWebAPIRequest } = require('../util/util')
 
-const { createWebAPIRequest } = require('../util/util');
-
-let router = new Router();
-
-router.get('/album',async(ctx,next)=>{
-  const data ={
+router.get('/', (req, res) => {
+  const cookie = req.get('Cookie') ? req.get('Cookie') : ''
+  const data = {
     csrf_token: ''
   }
-  const id=ctx.query.id
+  const id = req.query.id
   createWebAPIRequest(
     'music.163.com',
     `/weapi/v1/album/${id}`,
     'POST',
     data,
+    cookie,
     music_req => {
-      ctx.req.send(music_req)
+      res.send(music_req)
     },
-    err => ctx.req.status(502).send('fetch error')
+    err => res.status(502).send('fetch error')
   )
-  await next();
 })
 
 module.exports = router
