@@ -10,7 +10,7 @@ const koaLogger = require('koa-logger');
 var cors = require('koa-cors');
 const apicache = require("apicache");
 const serve = require('koa-static');
-const { createWebAPIRequest } = require('./util/util');
+const { createWebAPIRequestPromise } = require('./util/util');
 
 
 const app = new Koa();
@@ -51,6 +51,7 @@ app.use(async (ctx,next) => {
   const proxy=ctx.query.proxy;
   if (proxy) {
     ctx.req.headers.cookie = ctx.req.headers.cookie + `__proxy__${proxy}`;
+    ctx.res.setHeader('')
   }
   await next();
 });
@@ -64,23 +65,33 @@ let album = new Router()
 
 // 获取专辑内容
 album.get('/',async(ctx,next)=>{
-  const cookie = ctx.cookies.get('Cookie') ? ctx.cookies.get('Cookie') : ''
+  const req_cookie = ctx.cookies.get('Cookie') ? ctx.cookies.get('Cookie') : ''
   const data ={
     csrf_token: ''
   }
   const id=ctx.query.id
-  createWebAPIRequest(
+  // createWebAPIRequest(
+  //   'music.163.com',
+  //   `/weapi/v1/album/${id}`,
+  //   'POST',
+  //   data,
+  //   cookie,
+  //   music_req => {
+  //     //console.log(music_req);
+  //     ctx.type="json/text"
+  //     ctx.body = music_req
+  //   }
+  // )
+  const {body, cookie} = await createWebAPIRequestPromise(
     'music.163.com',
     `/weapi/v1/album/${id}`,
     'POST',
     data,
-    cookie,
-    music_req => {
-      console.log(music_req);
-      ctx.body = 'music electron'
-    }
-  )
-  ctx.body = 'music electron'
+    req_cookie);
+  ctx.type="application/json"
+
+  ctx.body = body;
+  console.log(cookie);
 })
 
 

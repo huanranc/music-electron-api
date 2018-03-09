@@ -84,6 +84,19 @@ function createWebAPIRequest(
   });
 }
 
+function createWebAPIRequestPromise(host, path, method, data, cookie) {
+  return new Promise((resolve, reject) => {
+    createWebAPIRequest(host,
+       path,
+       method,
+       data,
+       cookie,
+       (body,cookie)=>{
+        resolve({body, cookie});
+      }, reject);
+  });
+}
+
 function createRequest(path, method, data) {
   return new Promise((resolve, reject) => {
     const options = {
@@ -112,5 +125,6 @@ function createRequest(path, method, data) {
 }
 module.exports = {
   createWebAPIRequest,
+  createWebAPIRequestPromise,
   createRequest
 };
