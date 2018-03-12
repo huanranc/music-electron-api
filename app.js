@@ -1,15 +1,13 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const path = require('path');
-const mysql = require('mysql')
+const mysql = require('mysql');
 const MysqlStore = require('koa-mysql-session');
 const convert = require('koa-convert')
 const config = require('./config/config');
 const bodyParser = require('koa-bodyparser')
 const koaLogger = require('koa-logger');
 var cors = require('koa-cors');
-const apicache = require("apicache");
-const serve = require('koa-static');
 const { createWebAPIRequestPromise } = require('./util/util');
 
 
@@ -37,13 +35,6 @@ app.use(bodyParser())
 
 // 跨域设置
 app.use(cors());
-
-// app.use = serve(path.join(__dirname));
-
-// const onlyStatus200 = (ctx, next) => ctx.status === 200;
-// let cache = apicache.middleware;
-
-// app.use(cache("2 minutes", onlyStatus200));
 
 app.use(async (ctx,next) => {
   // ctx.type="text/html";

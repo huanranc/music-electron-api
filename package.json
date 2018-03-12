@@ -10,7 +10,6 @@
   "author": "huanranc",
   "license": "ISC",
   "dependencies": {
-    "apicache": "^1.2.0",
     "big-integer": "^1.6.26",
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",
