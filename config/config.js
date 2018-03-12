@@ -1,9 +1,9 @@
 const config = {
   //启动窗口
-  port: 3002,
+  port: 3000,
   // 数据库配置
   database: {
-    DATABASE: 'koa_demo',
+    DATABASE: 'demo',
     USERNAME: 'root',
     PASSWORD: 'root',
     PORT: '3306',

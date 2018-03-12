@@ -3,6 +3,7 @@ const Router = require('koa-router');
 const path = require('path');
 const mysql = require('mysql');
 const MysqlStore = require('koa-mysql-session');
+const session = require('koa-session-minimal');
 const convert = require('koa-convert')
 const config = require('./config/config');
 const bodyParser = require('koa-bodyparser')
@@ -13,19 +14,19 @@ const { createWebAPIRequestPromise } = require('./util/util');
 
 const app = new Koa();
 
-// // session存储配置
-// const sessionMysqlConfig= {
-//   user: config.database.USERNAME,
-//   password: config.database.PASSWORD,
-//   database: config.database.DATABASE,
-//   host: config.database.HOST,
-// }
+// session存储配置
+const sessionMysqlConfig= {
+  user: config.database.USERNAME,
+  password: config.database.PASSWORD,
+  database: config.database.DATABASE,
+  host: config.database.HOST,
+}
 
-// // 配置session中间件
-// app.use(session({
-//   key: 'USER_SID',
-//   store: new MysqlStore(sessionMysqlConfig)
-// }))
+// 配置session中间件
+app.use(session({
+  key: 'USER_SID',
+  store: new MysqlStore(sessionMysqlConfig)
+}))
 
 // 配置控制台日志中间件
 app.use(convert(koaLogger()))
@@ -278,6 +279,14 @@ lyric.get('/',async(ctx,next)=>{
 
 
 
+//注册
+let login = new Router()
+login.get('/', async(ctx, next) => {
+ 
+})
+
+
+
 
 let router = new Router();
 
@@ -292,6 +301,8 @@ router.use('/top/playlist/highquality',top_playlist_highquality.routes(),top_pla
 router.use('/playlist/detail',playlist_detail.routes(),playlist_detail.allowedMethods())
 router.use('/search',search.routes(),search.allowedMethods())
 router.use('/lyric',lyric.routes(),lyric.allowedMethods())
+
+router.use('/signup',login.routes(),login.allowedMethods())
 
 app.use(router.routes()).use(router.allowedMethods())
 

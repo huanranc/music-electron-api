@@ -4,8 +4,7 @@
   "description": "api",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "init_sql": "node ./lib/index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "huanranc",
   "license": "ISC",
