@@ -1,5 +1,4 @@
-// 参考 https://github.com/darknessomi/musicbox/wiki/
-// 来自 https://github.com/Binaryify/NeteaseCloudMusicApi/blob/master/util/crypto.js
+// https://github.com/darknessomi/musicbox/wiki/
 'use strict'
 const crypto = require('crypto')
 const bigInt = require('big-integer')

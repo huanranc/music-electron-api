@@ -7,6 +7,11 @@ const querystring = require("querystring");
 request.debug = true;
 
 function randomUserAgent() {
+  /*
+  浏览器User-Agent大全，User Agent也简称UA。
+  它是一个特殊字符串头，是一种向访问网站提供你所使用的浏览器类型及版本、操作系统及版本、浏览器内核、等信息的标识。
+  并悬浮提示来访者的user-agent信息
+  */
   const userAgentList = [
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36",
     "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1",
