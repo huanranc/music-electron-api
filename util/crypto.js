@@ -1,4 +1,4 @@
-// 参考 https://github.com/darknessomi/musicbox/wiki/
+// https://github.com/darknessomi/musicbox/wiki/
 'use strict'
 const crypto = require('crypto')
 const bigInt = require('big-integer')
