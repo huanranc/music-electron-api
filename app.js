@@ -266,13 +266,23 @@ lyric.get('/',async(ctx,next)=>{
 })
 
 //注册
-let login = new Router()
-login.get('/', async(ctx, next) => {
-  let sql=`SELECT * FROM m_users`
-  console.log(await query( sql ))
-  ctx.type="application/json"
-  ctx.body=await query( sql )
-  console.log(ctx.type)
+let register = new Router()
+register.post('/', async(ctx, next) => {
+  let sql=`SELECT * FROM m_users WHERE username='${ctx.query['username']}'`
+  const dataAll =  await query( sql)
+  if(dataAll.length>0) {
+    ctx.body="用户名存在了"
+  }
+  else {
+    const data = await query(`INSERT INTO m_users
+    VALUES(0,
+      '${ctx.query['username']}',
+      '${ctx.query['password']}',
+      '${ctx.query['email']}',
+      '${ctx.query['reg_time']}',
+      '${ctx.query['last_login_time']}')`)
+      ctx.body="成功"
+  }
 })
 
 //用户歌单
@@ -298,7 +308,7 @@ router.use('/playlist/detail',playlist_detail.routes(),playlist_detail.allowedMe
 router.use('/search',search.routes(),search.allowedMethods())
 router.use('/lyric',lyric.routes(),lyric.allowedMethods())
 
-router.use('/login',login.routes(),login.allowedMethods())
+router.use('/register',register.routes(),register.allowedMethods())
 
 router.use('/user/list',user_list.routes(),user_list.allowedMethods())
 
