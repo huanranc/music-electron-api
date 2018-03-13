@@ -268,10 +268,18 @@ lyric.get('/',async(ctx,next)=>{
 //登录
 let login = new Router()
 login.post('/',async(ctx,next) => {
-  let sql='SELECT * FROM m_users'
-  console.log(ctx.query['username'])
-  ctx.body=ctx.request.body.username
-  ctx.body=await query( sql)
+  let _sql=`
+  SELECT * from m_users
+    where password="${ctx.query['password']}" and username="${ctx.query['username']}"
+    limit 1`
+    let result = await query(_sql)
+    console.log(result[0].id)
+    if(result.length>0) {
+      ctx.body="已注册"
+      ctx.cookies.set('user_id',result[0].id)
+    } else {
+      ctx.body="未注册"
+    }
 })
 
 //注册
