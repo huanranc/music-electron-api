@@ -265,6 +265,15 @@ lyric.get('/',async(ctx,next)=>{
   console.log(ctx.type);
 })
 
+//登录
+let login = new Router()
+login.post('/',async(ctx,next) => {
+  let sql='SELECT * FROM m_users'
+  console.log(ctx.query['username'])
+  ctx.body=ctx.request.body.username
+  ctx.body=await query( sql)
+})
+
 //注册
 let register = new Router()
 register.post('/', async(ctx, next) => {
@@ -308,6 +317,7 @@ router.use('/playlist/detail',playlist_detail.routes(),playlist_detail.allowedMe
 router.use('/search',search.routes(),search.allowedMethods())
 router.use('/lyric',lyric.routes(),lyric.allowedMethods())
 
+router.use('/login',login.routes(),login.allowedMethods())
 router.use('/register',register.routes(),register.allowedMethods())
 
 router.use('/user/list',user_list.routes(),user_list.allowedMethods())
