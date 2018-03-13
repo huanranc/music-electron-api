@@ -265,19 +265,14 @@ lyric.get('/',async(ctx,next)=>{
   console.log(ctx.type);
 })
 
-
-async function selectAllData( ) {
-  let sql = 'SELECT * FROM m_users'
-  let dataList = await query( sql )
-  return dataList
-}
-
-//登录
+//注册
 let login = new Router()
 login.get('/', async(ctx, next) => {
-  let dataList = await selectAllData()
-  console.log( dataList )
-  console.log(username)
+  let sql=`SELECT * FROM m_users`
+  console.log(await query( sql ))
+  ctx.type="application/json"
+  ctx.body=await query( sql )
+  console.log(ctx.type)
 })
 
 //用户歌单
