@@ -9,6 +9,7 @@ const config = require('./config/config');
 const bodyParser = require('koa-bodyparser')
 const koaLogger = require('koa-logger');
 var cors = require('koa-cors');
+const userModel = require('./lib/util/db');
 const { createWebAPIRequestPromise } = require('./util/util');
 
 
@@ -282,7 +283,7 @@ lyric.get('/',async(ctx,next)=>{
 //注册
 let login = new Router()
 login.get('/', async(ctx, next) => {
- 
+      console.log('注册')
 })
 
 
