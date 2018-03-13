@@ -10,24 +10,11 @@ const bodyParser = require('koa-bodyparser')
 const koaLogger = require('koa-logger');
 var cors = require('koa-cors');
 const userModel = require('./lib/util/db');
+const { query } = require('./lib/util/db')
 const { createWebAPIRequestPromise } = require('./util/util');
 
 
 const app = new Koa();
-
-// session存储配置
-const sessionMysqlConfig= {
-  user: config.database.USERNAME,
-  password: config.database.PASSWORD,
-  database: config.database.DATABASE,
-  host: config.database.HOST,
-}
-
-// 配置session中间件
-app.use(session({
-  key: 'USER_SID',
-  store: new MysqlStore(sessionMysqlConfig)
-}))
 
 // 配置控制台日志中间件
 app.use(convert(koaLogger()))
@@ -279,11 +266,24 @@ lyric.get('/',async(ctx,next)=>{
 })
 
 
+async function selectAllData( ) {
+  let sql = 'SELECT * FROM m_users'
+  let dataList = await query( sql )
+  return dataList
+}
 
-//注册
+//登录
 let login = new Router()
 login.get('/', async(ctx, next) => {
-      console.log('注册')
+  let dataList = await selectAllData()
+  console.log( dataList )
+  console.log(username)
+})
+
+//用户歌单
+let user_list=new Router()
+user_list.get('/', async(ctx, next) => {
+  ctx.body="用户歌单"
 })
 
 
@@ -303,7 +303,9 @@ router.use('/playlist/detail',playlist_detail.routes(),playlist_detail.allowedMe
 router.use('/search',search.routes(),search.allowedMethods())
 router.use('/lyric',lyric.routes(),lyric.allowedMethods())
 
-router.use('/signup',login.routes(),login.allowedMethods())
+router.use('/login',login.routes(),login.allowedMethods())
+
+router.use('/user/list',user_list.routes(),user_list.allowedMethods())
 
 app.use(router.routes()).use(router.allowedMethods())
 

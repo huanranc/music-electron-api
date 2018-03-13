@@ -58,4 +58,6 @@ CREATE TABLE `m_users` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
+INSERT INTO `m_users` set username='admin', email='admin@example.com', password='123456',reg_time='1520953542',last_login_time='1520953577';
+
 SET FOREIGN_KEY_CHECKS = 1;
