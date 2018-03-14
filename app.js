@@ -268,9 +268,10 @@ lyric.get('/',async(ctx,next)=>{
 //登录
 let login = new Router()
 login.post('/',async(ctx,next) => {
+  console.log(ctx.request.body)
   let _sql=`
   SELECT * from m_users
-    where username="${ctx.query['username']}"
+    where username="${ctx.request.body.username}"
     limit 1`
     let result = await query(_sql)
     if(result.length>0) {
@@ -289,21 +290,24 @@ login.post('/',async(ctx,next) => {
 //注册
 let register = new Router()
 register.post('/', async(ctx, next) => {
-  let sql=`SELECT * FROM m_users WHERE username='${ctx.query['username']}'`
-  const dataAll =  await query( sql)
-  if(dataAll.length>0) {
-    ctx.body="用户名存在了"
-  }
-  else {
-    const data = await query(`INSERT INTO m_users
-    VALUES(0,
-      '${ctx.query['username']}',
-      '${ctx.query['password']}',
-      '${ctx.query['email']}',
-      '${ctx.query['reg_time']}',
-      '${ctx.query['last_login_time']}')`)
-      ctx.body="成功"
-  }
+  const username=ctx.request.body.username;
+  console.log(ctx)
+  // let sql=`SELECT * FROM m_users WHERE username='${ctx.request.body.username}'`
+  // const dataAll =  await query( sql)
+  // if(dataAll.length>0) {
+  //   ctx.body="用户名存在了"
+  // }
+  // else {
+  //   const data = await query(`INSERT INTO m_users
+  //   VALUES(0,
+  //     '${ctx.request.body.username}',
+  //     '${ctx.request.body.password}',
+  //     '${ctx.request.body.email}',
+  //     '${ctx.request.body.reg_time}',
+  //     '${ctx.request.body.last_login_time}')`)
+  //     ctx.body="成功"
+  // }
+  ctx.body="test"
 })
 
 //用户歌单
