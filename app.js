@@ -9,7 +9,6 @@ const config = require('./config/config');
 var bodyParser = require('koa-bodyparser')
 const koaLogger = require('koa-logger');
 var cors = require('koa-cors');
-const koabody = require('koa-body');
 const userModel = require('./lib/util/db');
 const { query } = require('./lib/util/db')
 const { createWebAPIRequestPromise } = require('./util/util');
@@ -20,7 +19,7 @@ const app = new Koa();
 // 配置存储session信息的mysql
 let store = new MysqlStore({
   user: 'root',
-  password: 'usb123',
+  password: 'root',
   database: 'music_electron',
   host: 'localhost',
 })

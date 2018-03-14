@@ -12,7 +12,6 @@
   "dependencies": {
     "big-integer": "^1.6.26",
     "koa": "^2.5.0",
-    "koa-body": "^2.5.0",
     "koa-bodyparser": "^3.2.0",
     "koa-convert": "^1.2.0",
     "koa-cors": "0.0.16",
@@ -23,7 +22,6 @@
     "koa-session-minimal": "^3.0.4",
     "koa-static": "^4.0.2",
     "mysql": "^2.15.0",
-    "nodeman": "^1.1.2",
     "request": "^2.83.0"
   }
 }

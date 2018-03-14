@@ -5,7 +5,7 @@ const config = {
   database: {
     DATABASE: 'music_electron',
     USERNAME: 'root',
-    PASSWORD: 'usb123',
+    PASSWORD: 'root',
     PORT: '3306',
     HOST: 'localhost'
   }
