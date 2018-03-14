@@ -11,10 +11,10 @@
  Target Server Version : 100213
  File Encoding         : utf-8
 
- Date: 03/13/2018 18:36:07 PM
+ Date: 03/14/2018 13:31:15 PM
 */
 
-SET NAMES utf8mb4;
+SET NAMES utf8;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
@@ -54,10 +54,8 @@ CREATE TABLE `m_users` (
   `password` varchar(64) NOT NULL COMMENT '用户密码',
   `email` varchar(64) DEFAULT '' COMMENT '用户邮箱',
   `reg_time` int(10) unsigned NOT NULL COMMENT '注册时间，10 位 Unix 时间戳',
-  `last_login_time` int(10) unsigned NOT NULL COMMENT '最后登录时间',
+  `last_login_time` int(10) unsigned DEFAULT 0 COMMENT '最后登录时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
-
-INSERT INTO `m_users` set username='admin', email='admin@example.com', password='123456',reg_time='1520953542',last_login_time='1520953577';
 
 SET FOREIGN_KEY_CHECKS = 1;

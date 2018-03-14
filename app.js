@@ -6,15 +6,30 @@ const MysqlStore = require('koa-mysql-session');
 const session = require('koa-session-minimal');
 const convert = require('koa-convert')
 const config = require('./config/config');
-const bodyParser = require('koa-bodyparser')
+var bodyParser = require('koa-bodyparser')
 const koaLogger = require('koa-logger');
 var cors = require('koa-cors');
+const koabody = require('koa-body');
 const userModel = require('./lib/util/db');
 const { query } = require('./lib/util/db')
 const { createWebAPIRequestPromise } = require('./util/util');
 
 
 const app = new Koa();
+
+// 配置存储session信息的mysql
+let store = new MysqlStore({
+  user: 'root',
+  password: 'usb123',
+  database: 'music_electron',
+  host: 'localhost',
+})
+
+// 使用session中间件
+app.use(session({
+  key: 'SESSION_ID'
+}))
+
 
 // 配置控制台日志中间件
 app.use(convert(koaLogger()))
@@ -276,8 +291,11 @@ login.post('/',async(ctx,next) => {
     let result = await query(_sql)
     if(result.length>0) {
       ctx.body="已注册"
-      if(ctx.query['password']===result[0].password) {
+      if(ctx.request.body.password===result[0].password) {
         ctx.cookies.set('user_id',result[0].id)
+        ctx.session = {
+          user_id:result[0].id
+        }
         ctx.body="success"
       } else {
         ctx.body="failed"
@@ -290,24 +308,30 @@ login.post('/',async(ctx,next) => {
 //注册
 let register = new Router()
 register.post('/', async(ctx, next) => {
-  const username=ctx.request.body.username;
-  console.log(ctx)
-  // let sql=`SELECT * FROM m_users WHERE username='${ctx.request.body.username}'`
-  // const dataAll =  await query( sql)
-  // if(dataAll.length>0) {
-  //   ctx.body="用户名存在了"
-  // }
-  // else {
-  //   const data = await query(`INSERT INTO m_users
-  //   VALUES(0,
-  //     '${ctx.request.body.username}',
-  //     '${ctx.request.body.password}',
-  //     '${ctx.request.body.email}',
-  //     '${ctx.request.body.reg_time}',
-  //     '${ctx.request.body.last_login_time}')`)
-  //     ctx.body="成功"
-  // }
-  ctx.body="test"
+  console.log(ctx.request.body)
+  const username = ctx.request.body.username;
+  let sql=`SELECT * FROM m_users WHERE username='${username}'`;
+  const dataAll =  await query( sql);
+  if(dataAll.length>0) {
+    ctx.body="用户名存在了"
+  }
+  else {
+    let email='';
+    if (ctx.request.body.email) {
+      email = ctx.request.body.email;
+    }
+    let time =Math.round(new Date().getTime()/1000).toString();
+    console.log(time)
+    let data = await query(`INSERT INTO m_users (username, password, email, reg_time)
+    VALUES(
+      '${username}',
+      '${ctx.request.body.password}',
+      '${email}',
+      ${time})`
+    );
+    console.log(data)
+      ctx.body="成功"
+  }
 })
 
 //用户歌单
