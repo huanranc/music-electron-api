@@ -1,3 +1,5 @@
+//参考 https://github.com/Binaryify/NeteaseCloudMusicApi/blob/master/util/util.js
+
 const Encrypt = require("./crypto.js");
 const request = require("request");
 const querystring = require("querystring");

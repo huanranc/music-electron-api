@@ -1,11 +1,11 @@
 const config = {
   //启动窗口
-  port: 3002,
+  port: 3000,
   // 数据库配置
   database: {
-    DATABASE: 'koa_demo',
+    DATABASE: 'music_electron',
     USERNAME: 'root',
-    PASSWORD: 'root',
+    PASSWORD: 'usb123',
     PORT: '3306',
     HOST: 'localhost'
   }
