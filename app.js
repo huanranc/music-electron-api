@@ -1,11 +1,11 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const path = require('path');
-const mysql = require('mysql');
+//const mysql = require('mysql');
 const MysqlStore = require('koa-mysql-session');
 const session = require('koa-session-minimal');
 const convert = require('koa-convert');
-const config = require('./config/config');
+//const config = require('./config/config');
 let bodyParser = require('koa-bodyparser');
 const koaLogger = require('koa-logger');
 let cors = require('koa-cors');
@@ -17,16 +17,23 @@ const {createWebAPIRequestPromise} = require('./util/util');
 const app = new Koa();
 
 // 配置存储session信息的mysql
-// let store = new MysqlStore({
-//   user: 'root',
-//   password: 'maxsky',
-//   database: 'music_electron',
-//   host: 'localhost',
-// });
+let store = new MysqlStore({
+    user: 'root',
+    password: 'maxsky',
+    database: 'music_electron',
+    host: '127.0.0.1',
+    port: 3366
+});
+
+let cookie = {
+    maxAge: 86400, // 一天/24小时
+};
 
 // 使用session中间件
 app.use(session({
-    key: 'SESSION_ID'
+    key: 'SESSION_ID',
+    store: store,
+    cookie: cookie
 }));
 
 
@@ -283,10 +290,7 @@ lyric.get('/', async (ctx, next) => {
 let login = new Router();
 login.post('/', async (ctx, next) => {
     console.log(ctx.request.body);
-    let _sql = `
-  SELECT * from m_users
-    where username="${ctx.request.body.username}"
-    limit 1`;
+    let _sql = `SELECT * FROM m_users where username="${ctx.request.body.username}" limit 1`;
     let result = await query(_sql);
     if (result.length > 0) {
         ctx.body = "registered";
