@@ -5,9 +5,9 @@ const config = {
     database: {
         DATABASE: 'music_electron',
         USERNAME: 'root',
-        PASSWORD: 'maxsky',
+        PASSWORD: 'root',
         HOST: '127.0.0.1',
-        PORT: 3366
+        PORT: 3306
     }
 };
 

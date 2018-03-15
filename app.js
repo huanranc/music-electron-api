@@ -289,18 +289,19 @@ login.post('/', async (ctx, next) => {
     limit 1`;
     let result = await query(_sql);
     if (result.length > 0) {
-        ctx.body = "已注册";
+        ctx.body = "registered";
         if (ctx.request.body.password === result[0].password) {
-            ctx.cookies.set('user_id', result[0].id);
+            // ctx.cookies.set('user_id', result[0].id);
             ctx.session = {
                 user_id: result[0].id
             };
-            ctx.body = "success"
+            ctx.body = {"status":200, "message": "success"} 
+            ctx.type = "application/json";
         } else {
-            ctx.body = "failed"
+            ctx.body = {"status": 201, "message": "fail"}
         }
     } else {
-        ctx.body = "未注册"
+        ctx.body = {"status": 404, "message": "NO"}
     }
 });
 
@@ -312,7 +313,7 @@ register.post('/', async (ctx, next) => {
     let sql = `SELECT * FROM m_users WHERE username='${username}'`;
     const dataAll = await query(sql);
     if (dataAll.length > 0) {
-        ctx.body = "用户名存在了"
+        ctx.body = {"status": 201, "message": "fail"}
     }
     else {
         let email = '';
@@ -329,7 +330,7 @@ register.post('/', async (ctx, next) => {
       ${time})`
         );
         console.log(data);
-        ctx.body = "成功"
+        ctx.body = {"status":200, "message": "success"} 
     }
 });
 
