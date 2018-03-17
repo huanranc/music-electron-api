@@ -27,7 +27,7 @@ CREATE TABLE `m_user_comments`  (
   `status` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '评论状态，默认为0，1为删除，2为系统/管理员删除（违规评论等）',
   `add_time` int(10) UNSIGNED NOT NULL COMMENT '添加时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户评论表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for m_user_fav_songs
@@ -48,16 +48,16 @@ CREATE TABLE `m_user_fav_songs`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `m_user_lists`;
 CREATE TABLE `m_user_lists`  (
-  `int` int(10) UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `user_id` int(10) UNSIGNED NOT NULL COMMENT '用户ID',
   `list_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '歌单名称',
   `list_type` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '歌单类型，默认 0 为用户自建歌单，1 为收藏他人歌单',
   `is_default` tinyint(1) UNSIGNED NULL DEFAULT 0 COMMENT '是否为默认歌单，默认0为非默认歌单，1为默认歌单且仅有1个默认歌单',
-  `source_id` int(10) UNSIGNED NOT NULL COMMENT '来源歌单ID',
+  `source_id` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '来源歌单ID',
   `sort` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '歌单排序',
   `status` tinyint(1) UNSIGNED NULL DEFAULT 0 COMMENT '歌单状态，默认0为正常，1为删除',
   `add_time` int(10) UNSIGNED NOT NULL COMMENT '添加时间',
-  PRIMARY KEY (`int`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户歌单表' ROW_FORMAT = Compact;
 
 -- ----------------------------
