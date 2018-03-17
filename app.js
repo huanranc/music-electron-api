@@ -80,7 +80,7 @@ album.get('/', async (ctx, next) => {
     ctx.type = "application/json";
 
     ctx.body = body;
-    console.log(cookie);
+    //console.log(cookie);
 });
 
 let top_album = new Router();
@@ -103,7 +103,7 @@ top_album.get('/', async (ctx, next) => {
         req_cookie);
     ctx.type = "application/json";
     ctx.body = body;
-    console.log(ctx.type);
+    //console.log(ctx.type);
 });
 
 let top_artists = new Router();
@@ -125,7 +125,7 @@ top_artists.get('/', async (ctx, next) => {
         req_cookie);
     ctx.type = "application/json";
     ctx.body = body;
-    console.log(ctx.type);
+    //console.log(ctx.type);
 });
 
 let artists = new Router();
@@ -169,7 +169,7 @@ personalized.get('/', async (ctx, next) => {
         req_cookie);
     ctx.type = "application/json";
     ctx.body = body;
-    console.log(ctx.type);
+    //console.log(ctx.type);
 });
 
 let personalized_newsonng = new Router();
@@ -191,7 +191,7 @@ personalized_newsonng.get('/', async (ctx, next) => {
         req_cookie);
     ctx.type = "application/json";
     ctx.body = body;
-    console.log(ctx.type);
+    //console.log(ctx.type);
 });
 
 
@@ -214,7 +214,7 @@ top_playlist_highquality.get('/', async (ctx, next) => {
         req_cookie);
     ctx.type = "application/json";
     ctx.body = body;
-    console.log(ctx.type);
+    //console.log(ctx.type);
 });
 
 let playlist_detail = new Router();
@@ -238,7 +238,7 @@ playlist_detail.get('/', async (ctx, next) => {
         req_cookie);
     ctx.type = "application/json";
     ctx.body = body;
-    console.log(ctx.type);
+    //console.log(ctx.type);
 });
 
 let search = new Router();
@@ -283,7 +283,7 @@ lyric.get('/', async (ctx, next) => {
         req_cookie);
     ctx.type = "application/json";
     ctx.body = body;
-    console.log(ctx.type);
+    //console.log(ctx.type);
 });
 
 //登录
@@ -324,7 +324,7 @@ register.post('/', async (ctx, next) => {
             email = ctx.request.body.email;
         }
         let time = Math.round(new Date().getTime() / 1000).toString();
-        console.log(time);
+        //console.log(time);
         let data = await query(`INSERT INTO m_users (username, password, email, reg_time)
     VALUES(
       '${username}',
@@ -347,7 +347,7 @@ register.post('/', async (ctx, next) => {
            '${add_time}' 
         )`;
          let user_list = await query(user_list_sql);
-         console.log(`'${user_id}','${list_name}','${is_default}','${source_id}','${add_time}'`)
+         //console.log(`'${user_id}','${list_name}','${is_default}','${add_time}'`)
         }
         ctx.body = {"status":200, "message": "success"} 
     }
@@ -359,8 +359,8 @@ let checkLogin=new Router();
 checkLogin.get('/',async (ctx,next) => {
     const userid=ctx.cookies.get('user_id');
     if(userid) {
-        ctx.body=parseInt(userid,10)
-        console.log(ctx.body)
+        ctx.body={"status":200, "user_id": parseInt(userid,10)}
+        //console.log(ctx.body)
     } else {
         ctx.body= {"status":404, "message": "no"} 
     }
