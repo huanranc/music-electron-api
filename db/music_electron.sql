@@ -48,7 +48,7 @@ CREATE TABLE `m_user_fav_songs`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `m_user_lists`;
 CREATE TABLE `m_user_lists`  (
-  `int` int(10) UNSIGNED NOT NULL,
+  `int` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` int(10) UNSIGNED NOT NULL COMMENT '用户ID',
   `list_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '歌单名称',
   `list_type` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '歌单类型，默认 0 为用户自建歌单，1 为收藏他人歌单',

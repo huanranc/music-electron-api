@@ -19,10 +19,10 @@ const app = new Koa();
 // 配置存储session信息的mysql
 let store = new MysqlStore({
     user: 'root',
-    password: 'maxsky',
+    password: 'root',
     database: 'music_electron',
     host: '127.0.0.1',
-    port: 3366
+    port: 3306
 });
 
 let cookie = {
@@ -295,7 +295,7 @@ login.post('/', async (ctx, next) => {
     if (result.length > 0) {
         ctx.body = "registered";
         if (ctx.request.body.password === result[0].password) {
-            // ctx.cookies.set('user_id', result[0].id);
+            ctx.cookies.set('user_id', result[0].id);
             ctx.session = {
                 user_id: result[0].id
             };
@@ -333,16 +333,59 @@ register.post('/', async (ctx, next) => {
       '${email}',
       ${time})`
         );
-        console.log(data);
+        let _sql = `SELECT * FROM m_users where username="${ctx.request.body.username}" limit 1`;
+        let result = await query(_sql);
+        if(result) {
+            let user_id=result[0].id;
+            let list_name='我喜欢的音乐';
+            let is_default=1;
+            let source_id=result[0].id;
+            let add_time= Math.round(new Date().getTime() / 1000).toString();
+            let user_list_sql= `INSERT INTO m_user_lists (user_id, list_name, is_default, source_id,add_time)
+        VALUES(
+          '${user_id}',
+          '${list_name}',
+          '${is_default}',
+          '${source_id}',
+           '${add_time}' 
+        )`;
+         let user_list = await query(user_list_sql);
+         console.log(`'${user_id}','${list_name}','${is_default}','${source_id}','${add_time}'`)
+        }
         ctx.body = {"status":200, "message": "success"} 
     }
 });
 
-//用户歌单
+
+//判断是否登录
+let checkLogin=new Router();
+checkLogin.get('/',async (ctx,next) => {
+    const userid=ctx.cookies.get('user_id');
+    if(userid) {
+        ctx.body=parseInt(userid,10)
+        console.log(ctx.body)
+    } else {
+        ctx.body= {"status":404, "message": "no"} 
+    }
+})
+
+//获取用户歌单表
+
 let user_list = new Router();
-user_list.get('/', async (ctx, next) => {
-    ctx.body = "用户歌单"
-});
+user_list.post('/',async (ctx,next) => {
+    //const userid=ctx.cookies.get('user_id');
+    // console.log(userid)
+    const userid = ctx.request.body.id;
+    if(userid&&userid.length>0) {
+        let sql = `SELECT * FROM m_user_lists WHERE user_id='${userid}'`;
+        let result = await query(sql);
+        ctx.body={"result":result[0],"status":200}
+    }
+})
+
+//收藏到歌单
+let collection = new Router();
+
 
 
 let router = new Router();
@@ -361,7 +404,8 @@ router.use('/lyric', lyric.routes(), lyric.allowedMethods());
 
 router.use('/login', login.routes(), login.allowedMethods());
 router.use('/register', register.routes(), register.allowedMethods());
-
+router.use('/check', checkLogin.routes(), checkLogin.allowedMethods());
+router.use('/collection', collection.routes(), collection.allowedMethods());
 router.use('/user/list', user_list.routes(), user_list.allowedMethods());
 
 app.use(router.routes()).use(router.allowedMethods());
