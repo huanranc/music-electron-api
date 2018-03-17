@@ -3,10 +3,10 @@ const config = {
     port: 3000,
     // 数据库配置
     database: {
-        DATABASE: '',
-        USERNAME: '',
-        PASSWORD: '',
-        HOST: '127.0.0.1',
+        DATABASE: 'music_electron',
+        USERNAME: 'root',
+         PASSWORD: 'root',
+        HOST: 'localhost',
         PORT: 3306
     }
 };

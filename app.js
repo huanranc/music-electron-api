@@ -289,7 +289,7 @@ lyric.get('/', async (ctx, next) => {
 //登录
 let login = new Router();
 login.post('/', async (ctx, next) => {
-    console.log(ctx.request.body);
+    // console.log(ctx.request.body);
     let _sql = `SELECT * FROM m_users where username="${ctx.request.body.username}" limit 1`;
     let result = await query(_sql);
     if (result.length > 0) {
@@ -312,7 +312,6 @@ login.post('/', async (ctx, next) => {
 //注册
 let register = new Router();
 register.post('/', async (ctx, next) => {
-    console.log(ctx.request.body);
     const username = ctx.request.body.username;
     let sql = `SELECT * FROM m_users WHERE username='${username}'`;
     const dataAll = await query(sql);
@@ -339,14 +338,12 @@ register.post('/', async (ctx, next) => {
             let user_id=result[0].id;
             let list_name='我喜欢的音乐';
             let is_default=1;
-            let source_id=result[0].id;
             let add_time= Math.round(new Date().getTime() / 1000).toString();
-            let user_list_sql= `INSERT INTO m_user_lists (user_id, list_name, is_default, source_id,add_time)
+            let user_list_sql= `INSERT INTO m_user_lists (user_id, list_name, is_default,add_time)
         VALUES(
           '${user_id}',
           '${list_name}',
           '${is_default}',
-          '${source_id}',
            '${add_time}' 
         )`;
          let user_list = await query(user_list_sql);
@@ -379,12 +376,38 @@ user_list.post('/',async (ctx,next) => {
     if(userid&&userid.length>0) {
         let sql = `SELECT * FROM m_user_lists WHERE user_id='${userid}'`;
         let result = await query(sql);
-        ctx.body={"result":result[0],"status":200}
+        ctx.body={"result":result,"status":200}
+    }
+})
+
+//自建歌单
+
+let person_list=new Router();
+person_list.post('/',async (ctx,next) => {
+    const userid = ctx.request.body.userid;
+    const listname = ctx.request.body.listname;
+    let sql = `SELECT * FROM m_user_lists WHERE user_id='${userid}' and list_name='${listname}' limit 1`;
+    const dataAll = await query(sql);
+    if(dataAll.length>0) {
+        ctx.body = {"status": 201, "message": "fail"}
+    } else {
+            let user_id=userid;
+            let list_name=listname;
+            let add_time= Math.round(new Date().getTime() / 1000).toString();
+            let user_list_sql= `INSERT INTO m_user_lists (user_id, list_name,add_time)
+        VALUES(
+          '${user_id}',
+          '${list_name}',
+           '${add_time}' 
+        )`;
+         let user_list = await query(user_list_sql);
+         ctx.body = {"status":200, "message": "success"} 
     }
 })
 
 //收藏到歌单
 let collection = new Router();
+
 
 
 
@@ -407,6 +430,7 @@ router.use('/register', register.routes(), register.allowedMethods());
 router.use('/check', checkLogin.routes(), checkLogin.allowedMethods());
 router.use('/collection', collection.routes(), collection.allowedMethods());
 router.use('/user/list', user_list.routes(), user_list.allowedMethods());
+router.use('/user/person',person_list.routes(),person_list.allowedMethods());
 
 app.use(router.routes()).use(router.allowedMethods());
 

@@ -53,7 +53,7 @@ CREATE TABLE `m_user_lists`  (
   `list_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '歌单名称',
   `list_type` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '歌单类型，默认 0 为用户自建歌单，1 为收藏他人歌单',
   `is_default` tinyint(1) UNSIGNED NULL DEFAULT 0 COMMENT '是否为默认歌单，默认0为非默认歌单，1为默认歌单且仅有1个默认歌单',
-  `source_id` int(10) UNSIGNED NOT NULL COMMENT '来源歌单ID',
+  `source_id` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否来源歌单ID,默认0是',
   `sort` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '歌单排序',
   `status` tinyint(1) UNSIGNED NULL DEFAULT 0 COMMENT '歌单状态，默认0为正常，1为删除',
   `add_time` int(10) UNSIGNED NOT NULL COMMENT '添加时间',
