@@ -16,18 +16,23 @@ CREATE TABLE `m_user_act_logs`  (
 -- ----------------------------
 -- Table structure for m_user_comments
 -- ----------------------------
-DROP TABLE IF EXISTS `m_user_comments`;
-CREATE TABLE `m_user_comments`  (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) UNSIGNED NOT NULL COMMENT '用户ID',
-  `comment` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '评论',
-  `type` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '类型，默认0为歌曲评论，1为歌单评论',
-  `song_id` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '歌曲ID，如果type非0',
-  `list_id` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '歌单ID，如果type非1',
-  `status` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '评论状态，默认为0，1为删除，2为系统/管理员删除（违规评论等）',
-  `add_time` int(10) UNSIGNED NOT NULL COMMENT '添加时间',
+DROP TABLE IF EXISTS `m_user_fav_songs`;
+CREATE TABLE `m_user_fav_songs` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL COMMENT '用户ID',
+  `song_id` int(10) unsigned NOT NULL COMMENT '歌曲ID，来源于网易云音乐',
+  `song_name` varchar(255) NOT NULL,
+  `list_id` int(10) unsigned NOT NULL COMMENT '所属歌单ID',
+  `art_id` int(10) NOT NULL,
+  `art_name` varchar(32) NOT NULL,
+  `al_id` int(32) NOT NULL,
+  `al_name` varchar(32) NOT NULL DEFAULT '',
+  `dt` varchar(32) NOT NULL,
+  `picUrl` varchar(255) NOT NULL,
+  `status` tinyint(1) unsigned DEFAULT '0' COMMENT '收藏状态，默认为0，1为已删除',
+  `add_time` int(10) unsigned NOT NULL COMMENT '收藏时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户评论表' ROW_FORMAT = Compact;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='用户收藏歌曲表';
 
 -- ----------------------------
 -- Table structure for m_user_fav_songs

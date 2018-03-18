@@ -421,22 +421,37 @@ del_person_list.del('/',async(ctx,next) => {
 //收藏到歌单
 let collection = new Router();
 collection.post('/',async(ctx,next) => {
+    const userid = ctx.request.body.user_id;
     const songid = ctx.request.body.song_id;
-    let sql = `SELECT * FROM m_user_fav_songs WHERE song_id='${songid}' limit 1`;
+    let sql = `SELECT * FROM m_user_fav_songs WHERE song_id='${songid}' and user_id='${userid}' limit 1`;
     const dataAll = await query(sql);
     if(dataAll.length>0) {
         ctx.body = {"status": 201, "message": "fail"}
     } else {
-            let user_id=ctx.request.body.user_id;
+            let user_id=userid;
             let song_id=songid;
+            let song_name=ctx.request.body.song_name;
             let list_id=ctx.request.body.list_id;
+            let art_id=ctx.request.body.art_id;
+            let art_name=ctx.request.body.art_name;
+            let al_id=ctx.request.body.al_id;
+            let al_name=ctx.request.body.al_name;
+            let dt=ctx.request.body.dt;
+            let picUrl=ctx.request.body.picUrl;
             let add_time= Math.round(new Date().getTime() / 1000).toString();
-            let songs_list_sql= `INSERT INTO m_user_fav_songs (user_id, song_id,list_id,add_time)
+            let songs_list_sql= `INSERT INTO m_user_fav_songs (user_id, song_id, song_name, list_id, art_id, art_name, al_id, al_name, dt, picUrl, add_time)
         VALUES(
           '${user_id}',
           '${song_id}',
+          '${song_name}',
           '${list_id}',
-           '${add_time}' 
+          '${art_id}',
+          '${art_name}',
+          '${al_id}',
+          '${al_name}',
+          '${dt}',
+          '${picUrl}',
+          '${add_time}' 
         )`;
          let user_list = await query(songs_list_sql);
          ctx.body = {"status":200, "message": "success"} 
