@@ -420,8 +420,28 @@ del_person_list.del('/',async(ctx,next) => {
 
 //收藏到歌单
 let collection = new Router();
-
-
+collection.post('/',async(ctx,next) => {
+    const songid = ctx.request.body.song_id;
+    let sql = `SELECT * FROM m_user_fav_songs WHERE song_id='${songid}' limit 1`;
+    const dataAll = await query(sql);
+    if(dataAll.length>0) {
+        ctx.body = {"status": 201, "message": "fail"}
+    } else {
+            let user_id=ctx.request.body.user_id;
+            let song_id=songid;
+            let list_id=ctx.request.body.list_id;
+            let add_time= Math.round(new Date().getTime() / 1000).toString();
+            let songs_list_sql= `INSERT INTO m_user_fav_songs (user_id, song_id,list_id,add_time)
+        VALUES(
+          '${user_id}',
+          '${song_id}',
+          '${list_id}',
+           '${add_time}' 
+        )`;
+         let user_list = await query(songs_list_sql);
+         ctx.body = {"status":200, "message": "success"} 
+    }
+})
 
 
 let router = new Router();
