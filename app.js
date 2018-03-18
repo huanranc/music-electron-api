@@ -471,6 +471,16 @@ del_song.del('/',async(ctx,next) => {
             })
 })
 
+//查找用户歌单的列表  通过歌单id查看歌单数据
+let user_song_list = new Router();
+user_song_list.post('/',async (ctx,next) => {
+    const list_id = ctx.request.body.list_id;
+        let sql = `SELECT * FROM m_user_fav_songs WHERE list_id='${list_id}'`;
+        let result = await query(sql);
+        ctx.body={"result":result,"status":200}
+})
+
+
 
 let router = new Router();
 
@@ -492,6 +502,7 @@ router.use('/check', checkLogin.routes(), checkLogin.allowedMethods());
 router.use('/collection', collection.routes(), collection.allowedMethods());
 router.use('/user/song/del:id',del_song.routes(),del_song.allowedMethods());
 router.use('/user/list', user_list.routes(), user_list.allowedMethods());
+router.use('/user/song/list', user_song_list.routes(), user_song_list.allowedMethods());
 router.use('/user/list/del:id',del_person_list.routes(),del_person_list.allowedMethods());
 router.use('/user/person',person_list.routes(),person_list.allowedMethods());
 
