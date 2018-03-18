@@ -405,6 +405,19 @@ person_list.post('/',async (ctx,next) => {
     }
 })
 
+//删除自建歌单
+let del_person_list=new Router();
+del_person_list.del('/',async(ctx,next) => {
+    let id=ctx.params.id
+    const sql=`DELETE FROM m_user_lists WHERE id=${id}`;
+    await query(sql)
+            .then(res=>{
+                ctx.body={"status":200, "message": "success"} 
+            }).catch(err=>{
+                ctx.body={"status": 404, "message": "fail"}
+            })
+})
+
 //收藏到歌单
 let collection = new Router();
 
@@ -430,6 +443,7 @@ router.use('/register', register.routes(), register.allowedMethods());
 router.use('/check', checkLogin.routes(), checkLogin.allowedMethods());
 router.use('/collection', collection.routes(), collection.allowedMethods());
 router.use('/user/list', user_list.routes(), user_list.allowedMethods());
+router.use('/user/list/del:id',del_person_list.routes(),del_person_list.allowedMethods());
 router.use('/user/person',person_list.routes(),person_list.allowedMethods());
 
 app.use(router.routes()).use(router.allowedMethods());
