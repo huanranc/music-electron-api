@@ -374,7 +374,7 @@ user_list.post('/',async (ctx,next) => {
     // console.log(userid)
     const userid = ctx.request.body.id;
     if(userid&&userid.length>0) {
-        let sql = `SELECT * FROM m_user_lists WHERE user_id='${userid}'`;
+        let sql = `SELECT * FROM m_user_lists WHERE user_id='${userid}' and status = 0`;
         let result = await query(sql);
         ctx.body={"result":result,"status":200}
     }
@@ -386,7 +386,7 @@ let person_list=new Router();
 person_list.post('/',async (ctx,next) => {
     const userid = ctx.request.body.userid;
     const listname = ctx.request.body.listname;
-    let sql = `SELECT * FROM m_user_lists WHERE user_id='${userid}' and list_name='${listname}' limit 1`;
+    let sql = `SELECT * FROM m_user_lists WHERE user_id='${userid}' and list_name='${listname}' and status = 0 limit 1`;
     const dataAll = await query(sql);
     if(dataAll.length>0) {
         ctx.body = {"status": 201, "message": "fail"}
@@ -407,9 +407,9 @@ person_list.post('/',async (ctx,next) => {
 
 //删除自建歌单
 let del_person_list=new Router();
-del_person_list.del('/',async(ctx,next) => {
+del_person_list.patch('/',async(ctx,next) => {
     let id=ctx.params.id
-    const sql=`DELETE FROM m_user_lists WHERE id=${id}`;
+    const sql=`UPDATE m_user_lists SET status = 1 WHERE id=${id}`;
     await query(sql)
             .then(res=>{
                 ctx.body={"status":200, "message": "success"} 
@@ -423,7 +423,7 @@ let collection = new Router();
 collection.post('/',async(ctx,next) => {
     const userid = ctx.request.body.user_id;
     const songid = ctx.request.body.song_id;
-    let sql = `SELECT * FROM m_user_fav_songs WHERE song_id='${songid}' and user_id='${userid}' limit 1`;
+    let sql = `SELECT * FROM m_user_fav_songs WHERE song_id='${songid}' and user_id='${userid}' and status = 0 limit 1`;
     const dataAll = await query(sql);
     if(dataAll.length>0) {
         ctx.body = {"status": 201, "message": "fail"}
@@ -460,9 +460,9 @@ collection.post('/',async(ctx,next) => {
 
 //删除单曲
 let del_song=new Router();
-del_song.del('/',async(ctx,next) => {
+del_song.patch('/',async(ctx,next) => {
     let id=ctx.params.id
-    const sql=`DELETE FROM m_user_fav_songs WHERE id=${id}`;
+    const sql=`UPDATE m_user_fav_songs SET status = 1 WHERE id=${id}`;
     await query(sql)
             .then(res=>{
                 ctx.body={"status":200, "message": "success"} 
@@ -475,7 +475,7 @@ del_song.del('/',async(ctx,next) => {
 let user_song_list = new Router();
 user_song_list.post('/',async (ctx,next) => {
     const list_id = ctx.request.body.list_id;
-        let sql = `SELECT * FROM m_user_fav_songs WHERE list_id='${list_id}'`;
+        let sql = `SELECT * FROM m_user_fav_songs WHERE list_id='${list_id}' and status = 0`;
         let result = await query(sql);
         ctx.body={"result":result,"status":200}
 })
