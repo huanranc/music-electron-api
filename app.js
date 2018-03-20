@@ -421,14 +421,15 @@ del_person_list.patch('/',async(ctx,next) => {
 //收藏到歌单
 let collection = new Router();
 collection.post('/',async(ctx,next) => {
-    const userid = ctx.request.body.user_id;
+    const listid = ctx.request.body.list_id;
     const songid = ctx.request.body.song_id;
-    let sql = `SELECT * FROM m_user_fav_songs WHERE song_id='${songid}' and user_id='${userid}' and status = 0 limit 1`;
+    let sql = `SELECT * FROM m_user_fav_songs WHERE song_id='${songid}' and list_id='${listid}' and status = 0`;
     const dataAll = await query(sql);
+    console.log(dataAll)
     if(dataAll.length>0) {
         ctx.body = {"status": 201, "message": "fail"}
     } else {
-            let user_id=userid;
+            let user_id=ctx.request.body.user_id;
             let song_id=songid;
             let song_name=ctx.request.body.song_name;
             let list_id=ctx.request.body.list_id;
