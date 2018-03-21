@@ -366,6 +366,20 @@ checkLogin.get('/',async (ctx,next) => {
     }
 })
 
+
+//查找用户信息
+let user=new Router();
+user.post('/',async (ctx,next) => {
+    const userid=ctx.request.body.id;
+    // console.log(userid)
+    if(userid&&userid.length>0) {
+        let sql = `SELECT * FROM m_users WHERE id='${userid}' and status = 0`;
+        let result = await query(sql);
+        // console.log(result[0].username)
+        ctx.body={"username":result[0].username,"status":200}
+    }
+})
+
 //获取用户歌单表
 
 let user_list = new Router();
@@ -431,12 +445,12 @@ collection.post('/',async(ctx,next) => {
     } else {
             let user_id=ctx.request.body.user_id;
             let song_id=songid;
-            let song_name=ctx.request.body.song_name;
+            let song_name=escape(ctx.request.body.song_name);
             let list_id=ctx.request.body.list_id;
             let art_id=ctx.request.body.art_id;
-            let art_name=ctx.request.body.art_name;
+            let art_name=escape(ctx.request.body.art_name);
             let al_id=ctx.request.body.al_id;
-            let al_name=ctx.request.body.al_name;
+            let al_name=escape(ctx.request.body.al_name);
             let dt=ctx.request.body.dt;
             let picUrl=ctx.request.body.picUrl;
             let add_time= Math.round(new Date().getTime() / 1000).toString();
@@ -500,6 +514,7 @@ router.use('/lyric', lyric.routes(), lyric.allowedMethods());
 router.use('/login', login.routes(), login.allowedMethods());
 router.use('/register', register.routes(), register.allowedMethods());
 router.use('/check', checkLogin.routes(), checkLogin.allowedMethods());
+router.use('/user',user.routes(),user.allowedMethods());
 router.use('/collection', collection.routes(), collection.allowedMethods());
 router.use('/user/song/del:id',del_song.routes(),del_song.allowedMethods());
 router.use('/user/list', user_list.routes(), user_list.allowedMethods());
