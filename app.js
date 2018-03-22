@@ -376,7 +376,11 @@ user.post('/',async (ctx,next) => {
         let sql = `SELECT * FROM m_users WHERE id='${userid}' and status = 0`;
         let result = await query(sql);
         // console.log(result[0].username)
-        ctx.body={"username":result[0].username,"status":200}
+        ctx.body={
+            "username":result[0].username,
+            "dt":result[0].reg_time,
+            "email":result[0].email,
+            "status":200}
     }
 })
 
@@ -391,6 +395,18 @@ user_list.post('/',async (ctx,next) => {
         let sql = `SELECT * FROM m_user_lists WHERE user_id='${userid}' and status = 0`;
         let result = await query(sql);
         ctx.body={"result":result,"status":200}
+    }
+})
+
+//查看自建歌单表的信息
+let user_detail=new Router();
+user_detail.post('/',async (ctx,next) => {
+    const list_id=ctx.request.body.list_id;
+    if(list_id) {
+        let sql = `SELECT * FROM m_user_lists WHERE id='${list_id}' and status = 0`;
+        let result = await query(sql);
+        ctx.body={"result":result,"status":200}
+        {console.log(result)}
     }
 })
 
@@ -515,6 +531,7 @@ router.use('/login', login.routes(), login.allowedMethods());
 router.use('/register', register.routes(), register.allowedMethods());
 router.use('/check', checkLogin.routes(), checkLogin.allowedMethods());
 router.use('/user',user.routes(),user.allowedMethods());
+router.use('/user/detail',user_detail.routes(),user_detail.allowedMethods());
 router.use('/collection', collection.routes(), collection.allowedMethods());
 router.use('/user/song/del:id',del_song.routes(),del_song.allowedMethods());
 router.use('/user/list', user_list.routes(), user_list.allowedMethods());
