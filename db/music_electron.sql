@@ -38,16 +38,22 @@ CREATE TABLE `m_user_fav_songs` (
 -- Table structure for m_user_fav_songs
 -- ----------------------------
 DROP TABLE IF EXISTS `m_user_fav_songs`;
-CREATE TABLE `m_user_fav_songs`  (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) UNSIGNED NOT NULL COMMENT '用户ID',
-  `song_id` int(10) UNSIGNED NOT NULL COMMENT '歌曲ID，来源于网易云音乐',
-  `list_id` int(10) UNSIGNED NOT NULL COMMENT '所属歌单ID',
-  `status` tinyint(1) UNSIGNED NULL DEFAULT 0 COMMENT '收藏状态，默认为0，1为已删除',
-  `add_time` int(10) UNSIGNED NOT NULL COMMENT '收藏时间',
+CREATE TABLE `m_user_fav_songs` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL COMMENT '用户ID',
+  `song_id` int(10) unsigned NOT NULL COMMENT '歌曲ID，来源于网易云音乐',
+  `song_name` varchar(255) NOT NULL,
+  `list_id` int(10) unsigned NOT NULL COMMENT '所属歌单ID',
+  `art_id` int(10) NOT NULL,
+  `art_name` varchar(32) NOT NULL,
+  `al_id` int(32) NOT NULL,
+  `al_name` varchar(32) NOT NULL DEFAULT '',
+  `dt` varchar(32) NOT NULL,
+  `picUrl` varchar(255) NOT NULL,
+  `status` tinyint(1) unsigned DEFAULT '0' COMMENT '收藏状态，默认为0，1为已删除',
+  `add_time` int(10) unsigned NOT NULL COMMENT '收藏时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户收藏歌曲表' ROW_FORMAT = Compact;
-
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='用户收藏歌曲表';
 -- ----------------------------
 -- Table structure for m_user_lists
 -- ----------------------------

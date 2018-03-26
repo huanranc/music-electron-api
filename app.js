@@ -286,6 +286,57 @@ lyric.get('/', async (ctx, next) => {
     //console.log(ctx.type);
 });
 
+
+let toplist = new Router();
+
+const top_list_all = {
+    "0": ["云音乐新歌榜", "3779629"],
+    "1": ["云音乐热歌榜", "3778678"],
+    "2": ["网易原创歌曲榜", "2884035"],
+    "3": ["云音乐飙升榜", "19723756"],
+    "4": ["云音乐电音榜", "10520166"],
+    "5": ["UK排行榜周榜", "180106"],
+    "6": ["美国Billboard周榜", "60198"],
+    "7": ["KTV嗨榜", "21845217"],
+    "8": ["iTunes榜", "11641012"],
+    "9": ["Hit FM Top榜", "120001"],
+    "10": ["日本Oricon周榜", "60131"],
+    "11": ["韩国Melon排行榜周榜", "3733003"],
+    "12": ["韩国Mnet排行榜周榜", "60255"],
+    "13": ["韩国Melon原声周榜", "46772709"],
+    "14": ["中国TOP排行榜(港台榜)", "112504"],
+    "15": ["中国TOP排行榜(内地榜)", "64016"],
+    "16": ["香港电台中文歌曲龙虎榜", "10169002"],
+    "17": ["华语金曲榜", "4395559"],
+    "18": ["中国嘻哈榜", "1899724"],
+    "19": ["法国 NRJ EuroHot 30周榜", "27135204"],
+    "20": ["台湾Hito排行榜", "112463"],
+    "21": ["Beatport全球电子舞曲榜", "3812895"]
+  };
+//排行榜
+toplist.get('/', async (ctx, next) => {
+    const req_cookie = ctx.cookies.get('Cookie') ? ctx.cookies.get('Cookie') : '';
+    const idx = ctx.query.idx;
+    const id = top_list_all[idx][1];
+    const data = {
+        id,
+        limit: ctx.query.limit || 30,
+        offset: ctx.query.limit || 0,
+        total: true,
+        n: 1000,
+        csrf_token: ''
+    };
+    const {body, cookie} = await createWebAPIRequestPromise(
+        'music.163.com',
+        '/weapi/v3/playlist/detail',
+        'POST',
+        data,
+        req_cookie);
+    ctx.type = "application/json";
+    ctx.body = body;
+});
+
+
 //登录
 let login = new Router();
 login.post('/', async (ctx, next) => {
@@ -410,6 +461,23 @@ user_detail.post('/',async (ctx,next) => {
     }
 })
 
+
+//编辑自建歌单表的信息
+let edit_user_detail=new Router();
+edit_user_detail.patch('/',async (ctx,next) => {
+    let id=ctx.params.id;
+    console.log(id)
+    let list_name=ctx.request.body.list_name;
+    console.log(list_name)
+    const sql=`UPDATE m_user_lists SET list_name='${list_name}' WHERE id=${id}`;
+    await query(sql)
+            .then(res=>{
+                ctx.body={"status":200, "message": "success"} 
+            }).catch(err=>{
+                ctx.body={"status": 404, "message": "fail"}
+            })
+})
+
 //自建歌单
 
 let person_list=new Router();
@@ -492,7 +560,8 @@ collection.post('/',async(ctx,next) => {
 //删除单曲
 let del_song=new Router();
 del_song.patch('/',async(ctx,next) => {
-    let id=ctx.params.id
+    let id=ctx.params.id;
+    console.log(id)
     const sql=`UPDATE m_user_fav_songs SET status = 1 WHERE id=${id}`;
     await query(sql)
             .then(res=>{
@@ -512,7 +581,6 @@ user_song_list.post('/',async (ctx,next) => {
 })
 
 
-
 let router = new Router();
 
 router.use('/', home.routes(), home.allowedMethods());
@@ -526,12 +594,14 @@ router.use('/top/playlist/highquality', top_playlist_highquality.routes(), top_p
 router.use('/playlist/detail', playlist_detail.routes(), playlist_detail.allowedMethods());
 router.use('/search', search.routes(), search.allowedMethods());
 router.use('/lyric', lyric.routes(), lyric.allowedMethods());
+router.use('/toplist',toplist.routes(),toplist.allowedMethods());
 
 router.use('/login', login.routes(), login.allowedMethods());
 router.use('/register', register.routes(), register.allowedMethods());
 router.use('/check', checkLogin.routes(), checkLogin.allowedMethods());
 router.use('/user',user.routes(),user.allowedMethods());
 router.use('/user/detail',user_detail.routes(),user_detail.allowedMethods());
+router.use('/edit/user/detail:id',edit_user_detail.routes(),edit_user_detail.allowedMethods());
 router.use('/collection', collection.routes(), collection.allowedMethods());
 router.use('/user/song/del:id',del_song.routes(),del_song.allowedMethods());
 router.use('/user/list', user_list.routes(), user_list.allowedMethods());
