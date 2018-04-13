@@ -318,10 +318,12 @@ toplist.get('/', async (ctx, next) => {
     const req_cookie = ctx.cookies.get('Cookie') ? ctx.cookies.get('Cookie') : '';
     const idx = ctx.query.idx;
     const id = top_list_all[idx][1];
+    const limit = ctx.query.limit || 20;
+    const offset = ctx.query.offset || 0;
     const data = {
         id,
-        limit: ctx.query.limit || 30,
-        offset: ctx.query.limit || 0,
+        limit,
+        offset,
         total: true,
         n: 1000,
         csrf_token: ''
@@ -347,9 +349,6 @@ login.post('/', async (ctx, next) => {
         ctx.body = "registered";
         if (ctx.request.body.password === result[0].password) {
             ctx.cookies.set('user_id', result[0].id);
-            ctx.session = {
-                user_id: result[0].id
-            };
             ctx.body = {"status":200, "message": "success"} 
             ctx.type = "application/json";
         } else {
@@ -411,7 +410,19 @@ checkLogin.get('/',async (ctx,next) => {
     const userid=ctx.cookies.get('user_id');
     if(userid) {
         ctx.body={"status":200, "user_id": parseInt(userid,10)}
-        //console.log(ctx.body)
+    } else {
+        ctx.body= {"status":404, "message": "no"} 
+    }
+})
+
+//注销
+let loginout=new Router();
+loginout.get('/',async (ctx,next) => {
+    const userid=ctx.cookies.get('user_id');
+    if(userid) {
+        ctx.cookies.set('user_id','',{expires:new Date()})
+        ctx.body={"status":200, "message": "yes"}
+        console.log("登出成功")
     } else {
         ctx.body= {"status":404, "message": "no"} 
     }
@@ -597,6 +608,7 @@ router.use('/lyric', lyric.routes(), lyric.allowedMethods());
 router.use('/toplist',toplist.routes(),toplist.allowedMethods());
 
 router.use('/login', login.routes(), login.allowedMethods());
+router.use('/loginout',loginout.routes(),loginout.allowedMethods());
 router.use('/register', register.routes(), register.allowedMethods());
 router.use('/check', checkLogin.routes(), checkLogin.allowedMethods());
 router.use('/user',user.routes(),user.allowedMethods());
