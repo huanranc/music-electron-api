@@ -18,6 +18,10 @@ String.prototype.hexEncode = function() {
   return result
 }
 
+//算法先通过createSecrectKey生成一个16位的随机字符串作为密钥secKey。 secKey=>证书管理密钥
+//然后将明文text进行两次AES加密获得密文encText。
+//secKey是客户端生产的所以还要对RSA加密在传给服务端。
+
 function createSecretKey(size) {
   const keys = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
   let key = ''
@@ -29,16 +33,28 @@ function createSecretKey(size) {
   return key
 }
 
+//AES加密的具体算法为: AES-128-CBC，输出格式为 base64 
+//AES加密时需要指定 iv：0102030405060708 
+
 function aesEncrypt(text, secKey) {
   const _text = text
   const lv = new Buffer('0102030405060708', 'binary')
   const _secKey = new Buffer(secKey, 'binary')
-  const cipher = crypto.createCipheriv('AES-128-CBC', _secKey, lv)
+  const cipher = crypto.createCipheriv('AES-128-CBC', _secKey, lv)  //Cipher类是Node.js的crypto模块的封装对象之一
   let encrypted = cipher.update(_text, 'utf8', 'base64')
   encrypted += cipher.final('base64')
   return encrypted
 }
 
+
+//RSA 加密采用非常规填充方式，既不是PKCS1也不是PKCS1_OAEP，
+//网易的做法是直接向前补0 
+//这样加密出来的密文有个特点：加密过程没有随机因素，明文多次加密后得到的密文是相同的 
+//然而，我们常用的 RSA 加密模块均不支持此种加密
+//输入过程中需要对加密字符串进行 hex 格式转码
+
+
+//JavaScript中的数字是没有前置0的，因此需要我们自己进行操作来添加前置0，而且还得转换成字符串。
 function zfill(str, size) {
   while (str.length < size) str = '0' + str
   return str
@@ -63,5 +79,11 @@ function Encrypt(obj) {
     encSecKey: encSecKey
   }
 }
+
+// AES加密是把歌曲id用16位数随机数作为key两次aes加密得到第一个参数params
+// 那么网易肯定需要解密得到歌曲id才能返回歌曲给我们，
+// 所以encSecKey这个参数是把16位数随机数加密然后传输到服务端，
+// 然后服务端RSA解密通过得到16位随机数当作AES解密的key从而得到歌曲的id
+// 然后返回对应的mp3播放地址等信息
 
 module.exports = Encrypt

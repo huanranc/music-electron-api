@@ -349,6 +349,9 @@ login.post('/', async (ctx, next) => {
         ctx.body = "registered";
         if (ctx.request.body.password === result[0].password) {
             ctx.cookies.set('user_id', result[0].id);
+            ctx.session = {
+                user_id: result[0].id
+            };
             ctx.body = {"status":200, "message": "success"} 
             ctx.type = "application/json";
         } else {
@@ -421,6 +424,7 @@ loginout.get('/',async (ctx,next) => {
     const userid=ctx.cookies.get('user_id');
     if(userid) {
         ctx.cookies.set('user_id','',{expires:new Date()})
+        ctx.cookies.set('SESSION_ID','',{expires:new Date()})
         ctx.body={"status":200, "message": "yes"}
         console.log("登出成功")
     } else {
