@@ -149,6 +149,48 @@ artists.get('/', async (ctx, next) => {
     ctx.body = body;
 });
 
+// 获取歌手单曲
+let artist_song=new Router();
+artist_song.get('/',async (ctx,next) => {
+    const req_cookie = ctx.cookies.get('Cookie') ? ctx.cookies.get('Cookie') : ''
+    const data = {
+        csrf_token: ''
+    }
+    const id = ctx.query.id;
+    const offset = ctx.query.offset || 0
+    const limit = ctx.query.limit || 30
+    const {body, cookie} = await createWebAPIRequestPromise(
+        'music.163.com',
+        `/weapi/v1/artist/${id}?offset=${offset}&limit=${limit}`,
+        'POST',
+        data,
+        req_cookie);
+    ctx.type = "application/json";
+    ctx.body = body;
+})
+
+// 获取歌手专辑列表
+let artist_album=new Router();
+artist_album.get('/',async (ctx,next) => {
+    const req_cookie = ctx.cookies.get('Cookie') ? ctx.cookies.get('Cookie') : ''
+    const data = {
+        csrf_token: '',
+        offset: ctx.query.offset || 0,
+        total: true,
+        limit: ctx.query.limit || 30,
+        csrf_token: ''
+    }
+    const id = ctx.query.id;
+    const {body, cookie} = await createWebAPIRequestPromise(
+        'music.163.com',
+        `/weapi/artist/albums/${id}`,
+        'POST',
+        data,
+        req_cookie);
+    ctx.type = "application/json";
+    ctx.body = body;
+})
+
 let personalized = new Router();
 
 //推荐歌单
@@ -603,6 +645,8 @@ router.use('/album', album.routes(), album.allowedMethods());
 router.use('/top/album', top_album.routes(), top_album.allowedMethods());
 router.use('/top/artists', top_artists.routes(), top_artists.allowedMethods());
 router.use('/toplist/artist', artists.routes(), artists.allowedMethods());
+router.use('/artist/song',artist_song.routes(), artist_song.allowedMethods());
+router.use('/artist/album',artist_album.routes(), artist_album.allowedMethods());
 router.use('/personalized', personalized.routes(), personalized.allowedMethods());
 router.use('/personalized/newsong', personalized_newsonng.routes(), personalized_newsonng.allowedMethods());
 router.use('/top/playlist/highquality', top_playlist_highquality.routes(), top_playlist_highquality.allowedMethods());
